@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
       mode: 'subscription',
       payment_method: paymentMethodId,
       line_items: [{
-        price: 'price_1Hh1Y2BzP3j8F4q9xLKf8QZd', // Replace with your actual price ID from Stripe
+        price: 'prod_QmekiI9rp1ZkRG', // Replace with your actual price ID from Stripe
         quantity: 1,
       }],
       success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,

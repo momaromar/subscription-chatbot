@@ -4,7 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import axios from 'axios';
 
-const stripePromise = loadStripe('your-publishable-key');
+const stripePromise = loadStripe('pk_live_51Pv3PWFIKAACs2oXZzDgh0DeO9Gb0MFt5W4gTG8HXzrl06P0HJR3UKjnHBlaibHqfQIRrg0kbIMBgmD7Cai1oCig000ljx3nvu');
 
 const PaymentPage = () => {
   return (
