@@ -1,6 +1,8 @@
 import { useState } from "react";
+import "./App.css";
 
 function App() {
+  const [chatBoxInput, setChatBoxInput] = useState("");
   const [response, setResponse] = useState("");
 
   const callApi = async () => {
@@ -13,7 +15,7 @@ function App() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(
-          {key: "secret123"}
+          {key: chatBoxInput} 
         )
       });
 
@@ -32,14 +34,28 @@ function App() {
   };
 
   return ( // All pretty straightforward stuff
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>frontend calling backend api test</h1>
+    <div className="container">
+      <h1>
+        frontend calling backend api test
+      </h1>
 
-      <button onClick={callApi}>
+      <input 
+        className="input"
+        type="text"
+        placeholder="Enter key..."
+        value={chatBoxInput}
+        onChange={(e) => setChatBoxInput(e.target.value)}
+      />
+
+      <button 
+        className="button"
+        onClick={callApi}>
         Call Backend
       </button>
 
-      <p>Response: {response}</p>
+      <p>
+        Response: {response}
+      </p>
     </div>
   );
 }
