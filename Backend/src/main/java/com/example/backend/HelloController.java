@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 // ^ This annotation is useful since it basically helps set CORS
 
-@CrossOrigin(origins = "http://localhost:3000") // ts currently only allows requests from local
-// @CrossOrigin(origins = "*") // ALLOWS REQUESTS FROM ANYWHERE! (USE FOR DEMONSTRATIONS!!!!)
+// @CrossOrigin(originPatterns = "http://*:3000") // ALLOWS REQUESTS FROM ANYWHERE! (USE FOR DEMONSTRATIONS!!!!)
+ @CrossOrigin(origins = "http://localhost:3000") // ts currently only allows requests from local
 @RestController
 public class HelloController {
 

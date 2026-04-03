@@ -6,9 +6,13 @@ function App() {
   const [chatHistory, setChatHistory] = useState([]);
   const [response, setResponse] = useState("");
   const bottomOfChatRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const callApi = async () => {
     try {
+      if (isLoading)
+        return;
+
       // "fetch" is javascript's version of "curl" in cmd
       // It's basically just used to call api endpoints
       const res = await fetch("http://localhost:8080/hello", {
@@ -20,6 +24,15 @@ function App() {
           {key: chatBoxInput} 
         )
       });
+
+      setChatHistory([...chatHistory,  // Loading text!
+        {
+          request: chatBoxInput,
+          response: "Loading..."
+        }
+      ]);
+      setIsLoading(true);
+
 
       // res.text is like res.body except better!
       // It apparently waits until the response is completely done,
@@ -40,6 +53,9 @@ function App() {
     } catch (err) {
       console.error(err);
       setResponse("Error calling API");
+    } finally  {
+      setChatBoxInput("");
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +93,7 @@ function App() {
         placeholder="Enter key..."
         value={chatBoxInput}
         onChange={(e) => setChatBoxInput(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") callApi(); }}
       />
 
       <button 
