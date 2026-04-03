@@ -53,13 +53,15 @@
 .history-item {
   font-size: 14px;
   margin-bottom: 5px;
-  word-break: break-all;
+  word-break: normal;
 }
 
 .history-request {
     text-align: right;
+    margin-bottom: 10px;
 }
 
 .history-response {
     text-align: left;
+    margin-bottom: 10px;
 }

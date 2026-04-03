@@ -1,13 +1,13 @@
 package com.example.backend;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 // ^ This annotation is useful since it basically helps set CORS
 
-// @CrossOrigin(originPatterns = "http://*:3000") // ALLOWS REQUESTS FROM ANYWHERE! (USE FOR DEMONSTRATIONS!!!!)
-@CrossOrigin(origins = "http://localhost:3000") // ts currently only allows requests from local
+@CrossOrigin(originPatterns = "http://*:3000") // ALLOWS REQUESTS FROM ANYWHERE! (USE FOR DEMONSTRATIONS!!!!)
+// @CrossOrigin(origins = "http://localhost:3000") // ts currently only allows requests from local
 @RestController
 public class HelloController {
 

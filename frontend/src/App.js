@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Login from "./Login";
 import "./App.css";
 
 function App() {
@@ -7,11 +8,21 @@ function App() {
   const [response, setResponse] = useState("");
   const bottomOfChatRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn]  = useState(false);
+  
 
   const callApi = async () => {
     try {
       if (isLoading)
         return;
+
+      setChatHistory([...chatHistory,  // Loading text!
+        {
+          request: chatBoxInput,
+          response: "Loading..."
+        }
+      ]);
+      setIsLoading(true);
 
       // "fetch" is javascript's version of "curl" in cmd
       // It's basically just used to call api endpoints
@@ -24,14 +35,6 @@ function App() {
           {postBody: chatBoxInput} 
         )
       });
-
-      setChatHistory([...chatHistory,  // Loading text!
-        {
-          request: chatBoxInput,
-          response: "Loading..."
-        }
-      ]);
-      setIsLoading(true);
 
 
       // res.text is like res.body except better!
@@ -66,6 +69,14 @@ function App() {
       bottomOfChatRef.current.scrollIntoView();
     }
   }, [chatHistory]);
+
+  if (isLoggedIn === false)
+  {
+    // Basically returns the Login page,
+    return <Login
+      onLogin = {() => setIsLoggedIn(true)} // ALSO gives it a function (onLogin) to work with if needed
+    />
+  }
 
   return ( // All pretty straightforward stuff
     <div className="container">
