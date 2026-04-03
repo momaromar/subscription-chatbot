@@ -15,13 +15,13 @@ function App() {
 
       // "fetch" is javascript's version of "curl" in cmd
       // It's basically just used to call api endpoints
-      const res = await fetch("http://localhost:8080/hello", {
+      const res = await fetch("http://localhost:8080/ai", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(
-          {key: chatBoxInput} 
+          {postBody: chatBoxInput} 
         )
       });
 

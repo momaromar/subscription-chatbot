@@ -1,19 +1,19 @@
 package com.example.backend;
 
-public class HelloRequest {
+public class PostRequest {
 
-    private String key;
+    private String postBody;
 
-    public String getKey()
+    public String getPostBody()
     {
-        return key;
+        return postBody;
     }
 
-    // If the request body contains {"key":"whateverValue"} (json format) Spring will automatically use
+    // If the request body contains {"postBody":"whateverValue"} (json format) Spring will automatically use
     // the library "Jackson" to call this setter accordingly (since both the JSON and Java variables
-    // are named "key").
-    public void setKey(String key)
+    // are named "postBody").
+    public void setPostBody(String postBody)
     {
-        this.key = key;
+        this.postBody = postBody;
     }
 }
