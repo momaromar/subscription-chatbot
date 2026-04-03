@@ -17,6 +17,8 @@ public class LoginController {
     private String authorizedUsername;
     @Value("${AUTHORIZEDPASSWORD}")
     private String authorizedPassword;
+    @Value("${AUTHORIZATIONTOKEN}")
+    private String authorizationToken;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> body)
@@ -26,7 +28,7 @@ public class LoginController {
 
         if (authorizedUsername.equals(username) && authorizedPassword.equals(password))
         {
-            return ResponseEntity.ok("Successful login!"); // ResponseEntity.ok is absolutely broken
+            return ResponseEntity.ok(authorizationToken); // ResponseEntity.ok is insanely OP
         }
 
         return ResponseEntity.status(401).body("Incorrect credentials!!");

@@ -20,6 +20,8 @@ function Login({ onLogin }) {
       const text = await res.text();
 
       if (res.ok) {
+        localStorage.setItem("token", text);
+        console.log(text);
         onLogin(); // Call that onLogin function we were graciously given by App.js
       } else {
         alert("Login failed: " + text);

@@ -13,6 +13,7 @@ function App() {
 
   const callApi = async () => {
     try {
+      const authToken = localStorage.getItem("token");
       if (isLoading)
         return;
 
@@ -29,7 +30,8 @@ function App() {
       const res = await fetch("http://localhost:8080/ai", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
         },
         body: JSON.stringify(
           {postBody: chatBoxInput} 
