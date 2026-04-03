@@ -33,3 +33,33 @@
   margin-top: 20px;
   font-weight: bold;
 }
+
+.history-box {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+}
+
+.history-content {
+  height: 230px;
+  overflow-y: scroll;
+  border: 5px solid #1a8517;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.history-item {
+  font-size: 14px;
+  margin-bottom: 5px;
+  word-break: break-all;
+}
+
+.history-request {
+    text-align: right;
+}
+
+.history-response {
+    text-align: left;
+}

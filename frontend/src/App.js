@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
   const [chatBoxInput, setChatBoxInput] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
   const [response, setResponse] = useState("");
+  const bottomOfChatRef = useRef(null);
 
   const callApi = async () => {
     try {
@@ -27,17 +29,47 @@ function App() {
       // object instead of a string. res.text is clean!
       const text = await res.text();
       setResponse(text);
+
+      setChatHistory([...chatHistory, 
+        {
+          request: chatBoxInput,
+          response: text
+        }
+      ]);
+
     } catch (err) {
       console.error(err);
       setResponse("Error calling API");
     }
   };
 
+  // Handy tool that makes the bottom of the chat auto-scroll into view whenever chatHistory updates!
+  // Learned how to do this through this useful youtube vid: "https://youtu.be/yaIytT_Y0DA?si=nqppce3Xizo6GUUL"
+  useEffect(() => { 
+    if (bottomOfChatRef.current) {
+      bottomOfChatRef.current.scrollIntoView();
+    }
+  }, [chatHistory]);
+
   return ( // All pretty straightforward stuff
     <div className="container">
       <h1>
         frontend calling backend api test
       </h1>
+
+      <div className="history-box">
+        <h3>Chat</h3>
+        <div className="history-content">
+          {chatHistory.map((item) => (   // map is basically a for loop. Meaning, for each var item in chatHistory, add a <div> containing item
+            <div className="history-item">
+              <div className="history-request"> {item.request} </div>
+              <div className="history-response"> {item.response} </div>
+            </div>
+          ))}
+          <div ref={bottomOfChatRef}></div>
+        </div>
+      </div>
+
 
       <input 
         className="input"
