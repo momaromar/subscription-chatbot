@@ -1,0 +1,9 @@
+{
+  "accounts": [
+    {
+      "username": "testuser",
+      "stripeCheckoutSessionId": "local_dev",
+      "paidAt": "2026-04-04T00:00:00Z"
+    }
+  ]
+}

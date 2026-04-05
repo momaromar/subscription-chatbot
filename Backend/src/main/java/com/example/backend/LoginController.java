@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity; // ResponseEntity cameo
 
 import java.util.Map;
@@ -21,14 +22,19 @@ public class LoginController {
     private String authorizationToken;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> body)
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body)
     {
         String username = body.get("username");
         String password = body.get("password");
 
-        if (authorizedUsername.equals(username) && authorizedPassword.equals(password))
-        {
-            return ResponseEntity.ok(authorizationToken); // ResponseEntity.ok is insanely OP
+        if (authorizedUsername.equals(username) && authorizedPassword.equals(password)) {
+            // JSON body so the frontend can show who is paying / gating (Stripe pay module).
+            Map<String, String> json = Map.of(
+                    "token", authorizationToken,
+                    "username", username);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(json);
         }
 
         return ResponseEntity.status(401).body("Incorrect credentials!!");

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Login from "./Login";
+import PaymentGate from "./PaymentGate";
 import "./App.css";
 
 function App() {
@@ -8,8 +9,78 @@ function App() {
   const [response, setResponse] = useState("");
   const bottomOfChatRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn]  = useState(false);
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"));
+
+  // --- Stripe paywall state (isolated from original chat logic) ---
+  const [hasPaid, setHasPaid] = useState(false);
+  const [accessLoading, setAccessLoading] = useState(false);
+  const [displayUsername, setDisplayUsername] = useState("");
+
+  const refreshPaidAccess = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setHasPaid(false);
+      return;
+    }
+    setAccessLoading(true);
+    try {
+      const res = await fetch("http://localhost:8080/api/stripepay/access-status", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        setHasPaid(false);
+        return;
+      }
+      const data = await res.json();
+      setHasPaid(!!data.paid);
+      if (data.username) {
+        setDisplayUsername(data.username);
+      }
+    } catch (e) {
+      console.error(e);
+      setHasPaid(false);
+    } finally {
+      setAccessLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+    setDisplayUsername(localStorage.getItem("username") || "");
+    refreshPaidAccess();
+  }, [isLoggedIn, refreshPaidAccess]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") !== "success") {
+      return;
+    }
+    const sessionId = params.get("session_id");
+    const token = localStorage.getItem("token");
+    if (!sessionId || !token) {
+      window.history.replaceState({}, "", window.location.pathname);
+      return;
+    }
+    (async () => {
+      try {
+        await fetch("http://localhost:8080/api/stripepay/verify-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ sessionId }),
+        });
+      } catch (e) {
+        console.error(e);
+      } finally {
+        window.history.replaceState({}, "", window.location.pathname);
+        refreshPaidAccess();
+      }
+    })();
+  }, [refreshPaidAccess]);
 
   const callApi = async () => {
     try {
@@ -48,6 +119,10 @@ function App() {
       const text = await res.text();
       setResponse(text);
 
+      if (res.status === 402) {
+        setHasPaid(false);
+      }
+
       setChatHistory([...chatHistory, 
         {
           request: chatBoxInput,
@@ -72,12 +147,29 @@ function App() {
     }
   }, [chatHistory]);
 
-  if (isLoggedIn === false)
-  {
+  if (isLoggedIn === false) {
     // Basically returns the Login page,
-    return <Login
-      onLogin = {() => setIsLoggedIn(true)} // ALSO gives it a function (onLogin) to work with if needed
-    />
+    return (
+      <Login
+        onLogin={() => setIsLoggedIn(true)} // ALSO gives it a function (onLogin) to work with if needed
+      />
+    );
+  }
+
+  if (accessLoading) {
+    return (
+      <div className="container">
+        <p>Checking subscription access…</p>
+      </div>
+    );
+  }
+
+  if (!hasPaid) {
+    return (
+      <PaymentGate
+        displayUsername={displayUsername}
+      />
+    );
   }
 
   return ( // All pretty straightforward stuff

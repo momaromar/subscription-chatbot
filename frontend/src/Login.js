@@ -17,13 +17,16 @@ function Login({ onLogin }) {
         })
       });
 
-      const text = await res.text();
-
       if (res.ok) {
-        localStorage.setItem("token", text);
-        console.log(text);
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        if (data.username) {
+          localStorage.setItem("username", data.username);
+        }
+        console.log("logged in");
         onLogin(); // Call that onLogin function we were graciously given by App.js
       } else {
+        const text = await res.text();
         alert("Login failed: " + text);
       }
 
